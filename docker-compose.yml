@@ -1,0 +1,16 @@
+version: '3'
+services:
+#  ansible-executor:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.executor
+#    ports:
+#      - "2222:22"
+#      - "8080:80"
+
+  ansible:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./playbooks:/playbook

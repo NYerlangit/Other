@@ -1,0 +1,42 @@
+---
+- hosts: "homevm1"
+  become: true
+  tasks:
+  - name: "Install nginx,MySQL_php via apt"
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      state: "latest"
+      update_cache: true
+    loop:
+      - nginx
+      - php-fpm
+      - php8.1-fpm
+      - mysql-server
+      - php-mysql
+  - name: "Stopped nginx"
+    ansible.builtin.service:
+      name: "nginx"
+      state: "stopped"
+  - name: "Copy phpinfo to /var/www/html"
+    ansible.builtin.copy:
+      src: "/phpinfo.php.j2"
+      dest: "/var/www/html/index.php"
+      owner: "ansible"
+      group: "ansible"
+      mode: "0644"
+  - name: "Copy nginx configuration"
+    ansible.builtin.copy:
+      src: "/playbook/default.conf"
+      dest: "/etc/nginx/sites-available/default"
+      owner: "ansible"
+      group: "ansible"
+      mode: "0644"
+  - name: "Start Nginx_mysql,php-fpm and boot"
+    service:
+      name: "{{ item }}"
+      state: "started"
+      enabled: "yes"
+    loop:
+      - nginx
+      - php8.1-fpm
+      - mysql
