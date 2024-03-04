@@ -92,16 +92,13 @@ playbook/playbook.yml
 /playbook/default
 /etc/nginx/sites-available/default
 server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
-        root /var/www/html;
+...
         index index.php index.html index.htm index.nginx-debian.html;
-        server_name _;
-        location / { try_files $uri $uri/ =404 }
+...
         location ~ \.php$ {
                include snippets/fastcgi-php.conf;
                fastcgi_pass unix:/run/php/php8.1-fpm.sock; }
-        location ~ /\.ht { deny all; }
+...
 }
 ЗАПУСК!
 ansible-playbook /playbook/playbook.yml -i /playbook/hosts --ssh-extra-args='-o StrictHostKeyChecking=no'  -b
